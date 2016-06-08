@@ -39,8 +39,11 @@ object BulkMA extends App {
     aux()
   }
 
+
+
   for (input <- managed(new FileReader("data/neko.txt"))) {
-    tokenize(input) foreach println
+    val noun = tokenize(input).filter(token => token("pos") == "名詞").map(token => token("surface"))
+    noun foreach println
   }
 
 
