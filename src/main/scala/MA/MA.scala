@@ -15,8 +15,9 @@ import org.atilika.kuromoji.Token
   */
 object MA extends App {
 
+  val file = Source.fromFile("data/aikatsu.txt").getLines().toList.head
   val tokenizer = Tokenizer.builder.mode(Tokenizer.Mode.NORMAL).build()
-  val tokens = tokenizer.tokenize("私のアツいアイドル活動、アイカツ！始まります！フフッヒ。").toArray
+  val tokens = tokenizer.tokenize(file).toArray
 
   def outToken(tokens: Array[AnyRef]): Unit = {
     tokens foreach { t =>
@@ -24,7 +25,7 @@ object MA extends App {
       println(s"${token.getSurfaceForm} - ${token.getAllFeatures}")
     }
 
-    println("-------------------------------------------")
+    println("---------------------------------------------")
 
     tokens foreach { t =>
       val token = t.asInstanceOf[Token]
