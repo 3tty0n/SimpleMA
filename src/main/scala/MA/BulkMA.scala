@@ -1,14 +1,11 @@
 package MA
 
-import java.io.{Reader, FileReader}
-
-import org.apache.lucene.analysis.ja.tokenattributes.{PartOfSpeechAttribute, BaseFormAttribute}
+import java.io.{FileReader, PrintWriter, Reader}
+import java.util.Date
+import org.apache.lucene.analysis.ja.tokenattributes.{BaseFormAttribute, PartOfSpeechAttribute}
 import resource._
 import org.apache.lucene.analysis.ja.JapaneseTokenizer
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
-
-import org.atilika.kuromoji.Tokenizer
-import org.atilika.kuromoji.Token
 
 /**
   * Created by micchon1 on 2016/06/08.
@@ -39,11 +36,24 @@ object BulkMA extends App {
     aux()
   }
 
+  def duplicateAggregate(lst: List[String]) = {
+    lst.groupBy(identity).mapValues(_.size).toList.sortWith(_._2 > _._2)
+  }
 
+  def writeToFile(lst: List[(String, Int)]): Unit = {
+    val date = new Date()
+    val file = new PrintWriter(s"output/${date.toString}")
+    lst.foreach { element =>
+      file.write(s"$element \n")
+    }
+    file.close()
+  }
 
   for (input <- managed(new FileReader("data/neko.txt"))) {
     val noun = tokenize(input).withFilter(token => token("pos") == "名詞").map(token => token("surface"))
-    noun foreach println
+    val rankedList = duplicateAggregate(noun.toList).take(50)
+    rankedList foreach println
+    writeToFile(rankedList)
   }
 
 
