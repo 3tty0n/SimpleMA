@@ -1,6 +1,7 @@
 package MA
 
 import java.io.{File, FileReader}
+import scala.io.Source
 
 import org.apache.lucene.analysis.ja.tokenattributes.{PartOfSpeechAttribute, BaseFormAttribute}
 import resources._
@@ -15,19 +16,22 @@ import org.atilika.kuromoji.Token
 object MA extends App {
 
   val tokenizer = Tokenizer.builder.mode(Tokenizer.Mode.NORMAL).build()
-  val tokens = tokenizer.tokenize("私のアツいアイドル活動、アイカツ！始まります！フフッヒ").toArray
+  val tokens = tokenizer.tokenize("私のアツいアイドル活動、アイカツ！始まります！フフッヒ。").toArray
 
-  tokens foreach { t =>
-    val token = t.asInstanceOf[Token]
-    println(s"${token.getSurfaceForm} - ${token.getAllFeatures}")
-  }
-
-  println("---------------------------------------")
-
-  val sorted = tokens foreach { t =>
-    val token = t.asInstanceOf[Token]
-    if (token.getPartOfSpeech.startsWith("名詞"))
+  def outToken(tokens: Array[AnyRef]): Unit = {
+    tokens foreach { t =>
+      val token = t.asInstanceOf[Token]
       println(s"${token.getSurfaceForm} - ${token.getAllFeatures}")
+    }
+
+    println("-------------------------------------------")
+
+    tokens foreach { t =>
+      val token = t.asInstanceOf[Token]
+      if (token.getPartOfSpeech.startsWith("名詞"))
+        println(s"${token.getSurfaceForm} - ${token.getAllFeatures}")
+    }
   }
 
+  outToken(tokens)
 }
