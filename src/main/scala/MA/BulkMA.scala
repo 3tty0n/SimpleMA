@@ -36,7 +36,7 @@ object BulkMA extends App {
     aux()
   }
 
-  def duplicateAggregate(lst: List[String]) = {
+  def duplicateAggregate(lst: List[String]): List[(String, Int)] = {
     lst.groupBy(identity).mapValues(_.size).toList.sortWith(_._2 > _._2)
   }
 
@@ -51,7 +51,7 @@ object BulkMA extends App {
 
   for (input <- managed(new FileReader("data/neko.txt"))) {
     val noun = tokenize(input).withFilter(token => token("pos") == "名詞").map(token => token("surface"))
-    val rankedList = duplicateAggregate(noun.toList).take(50)
+    val rankedList = duplicateAggregate(noun.toList).filter(p => p._1.size > 1).take(50)
     rankedList foreach println
     writeToFile(rankedList)
   }
