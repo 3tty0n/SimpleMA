@@ -20,18 +20,22 @@ object MA extends App {
   val tokens = tokenizer.tokenize(file).toArray
 
   def outToken(tokens: Array[AnyRef]): Unit = {
-    tokens foreach { t =>
-      val token = t.asInstanceOf[Token]
-      println(s"${token.getSurfaceForm} - ${token.getAllFeatures}")
-    }
+    tokens foreach (t => outAllFeatures(t))
 
     println("---------------------------------------------")
 
-    tokens foreach { t =>
-      val token = t.asInstanceOf[Token]
-      if (token.getPartOfSpeech.startsWith("名詞"))
-        println(s"${token.getSurfaceForm} - ${token.getAllFeatures}")
-    }
+    tokens foreach (t => outNounFeatures(t))
+  }
+
+  def outAllFeatures(t: AnyRef): Unit = {
+    val token = t.asInstanceOf[Token]
+    println(s"${token.getSurfaceForm} - ${token.getAllFeatures}")
+  }
+
+  def outNounFeatures(t: AnyRef): Unit = {
+    val token = t.asInstanceOf[Token]
+    if (token.getPartOfSpeech.startsWith("名詞"))
+      println(s"${token.getSurfaceForm} - ${token.getAllFeatures}")
   }
 
   outToken(tokens)
