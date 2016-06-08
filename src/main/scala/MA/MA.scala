@@ -1,12 +1,6 @@
 package MA
 
-import java.io.{File, FileReader}
 import scala.io.Source
-
-import org.apache.lucene.analysis.ja.tokenattributes.{PartOfSpeechAttribute, BaseFormAttribute}
-import resources._
-import org.apache.lucene.analysis.ja.JapaneseTokenizer
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
 import org.atilika.kuromoji.Tokenizer
 import org.atilika.kuromoji.Token
 
