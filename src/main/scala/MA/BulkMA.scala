@@ -12,6 +12,21 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute
   */
 object BulkMA extends App {
 
+  val REFERENCE_TERM = List(
+    "これ", "ここ", "こいつ", "こっち", "この", "こう", "こんな",
+    "それ",	"そこ",	"そっち", "そちら",  "そいつ", "そなた",	"その"	, "そう", "そんな",
+    "あれ", 	"あそこ", 	"あっち", "あちら", "あいつ", "あなた", "あの", "ああ", "あんな",
+    "どれ", "どこ", "どっち", "どちら", "どいつ", "どなた", "どの", "どう", "どんな"
+  )
+
+  val FORMAT_NOUN = List(
+    "こと", "もの", "ところ", "わけ", "はず", "つもり", "ため", "せい", "おかげ",
+    "まま", "とおり", "かわり", "くせ", "わり", "ほう", "たび", "よう", "さん", "うち",
+    "もん", "いつ", "なに"
+  )
+
+  val FILETER_TERM = REFERENCE_TERM ++ FORMAT_NOUN
+
   def tokenize(input: Reader): Stream[Map[String, String]] = {
     val tokenizer = new JapaneseTokenizer(null, false, JapaneseTokenizer.Mode.NORMAL)
     tokenizer.setReader(input)
@@ -51,9 +66,12 @@ object BulkMA extends App {
 
   for (input <- managed(new FileReader("data/neko.txt"))) {
     val noun = tokenize(input).withFilter(token => token("pos") == "名詞").map(token => token("surface"))
-    val rankedList = duplicateAggregate(noun.toList).filter(p => p._1.size > 1).take(50)
+    val rankedList = duplicateAggregate(noun.toList)
+      .filterNot(p => FILETER_TERM.contains(p._1) )
+      .filter(p => p._1.size > 1)
+      .take(50)
     rankedList foreach println
-    writeToFile(rankedList)
+    //writeToFile(rankedList)
   }
 
 
