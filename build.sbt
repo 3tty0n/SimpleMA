@@ -5,7 +5,7 @@ lazy val baseSettings = Seq(
   name := "SimpleMA",
   version := "0.1.0",
   scalaVersion := "2.11.8",
-  libraryDependencies ++= luceneDependencies ++ testDependencies ++ kuromojiDependencies,
+  libraryDependencies ++= luceneDependencies ++ testDependencies ++ kuromojiDependencies ++ armDependencies,
   resolvers += "Atilika Open Source repository" at "http://www.atilika.org/nexus/content/repositories/atilika"
 )
 
@@ -22,4 +22,13 @@ lazy val kuromojiDependencies = Seq(
 lazy val testDependencies = Seq(
   "org.scalactic" %% "scalactic" % "2.2.6",
   "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+)
+
+lazy val moduleDependencies = Seq(
+  "org.scala-lang.modules" %% "scala-xml" % "1.0.3",
+  "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3"
+)
+
+lazy val armDependencies = Seq(
+  "com.jsuereth" %% "scala-arm" % "1.4"
 )
