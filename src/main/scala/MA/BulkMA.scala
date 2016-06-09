@@ -25,7 +25,7 @@ object BulkMA extends App {
     "もん", "いつ", "なに"
   )
 
-  val FILETER_TERM = REFERENCE_TERM ++ FORMAT_NOUN
+  val FILTER_TERM = REFERENCE_TERM ++ FORMAT_NOUN
 
   def tokenize(input: Reader): Stream[Map[String, String]] = {
     val tokenizer = new JapaneseTokenizer(null, false, JapaneseTokenizer.Mode.NORMAL)
@@ -67,7 +67,7 @@ object BulkMA extends App {
   for (input <- managed(new FileReader("data/neko.txt"))) {
     val noun = tokenize(input).withFilter(token => token("pos") == "名詞").map(token => token("surface"))
     val rankedList = duplicateAggregate(noun.toList)
-      .filterNot(p => FILETER_TERM.contains(p._1) )
+      .filterNot(p => FILTER_TERM.contains(p._1) )
       .filter(p => p._1.size > 1)
       .take(50)
     rankedList foreach println
